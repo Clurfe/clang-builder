@@ -8,8 +8,7 @@ on:
     - cron: '15 0 * * *'
 
 env:
-  GITLAB_NAME: ${{ secrets.GITLAB_NAME }}
-  GITLAB_SECRET: ${{ secrets.GITLAB_SECRET }}
+  GIT_SECRET: ${{ secrets.GIT_SECRET }}
   BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
 
 jobs:
