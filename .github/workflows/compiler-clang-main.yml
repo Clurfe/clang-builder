@@ -12,23 +12,6 @@ env:
   BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
 
 jobs:
-  # TigaLebas:
-
-  #   runs-on: ubuntu-latest
-
-  #   container:
-  #     image: zycromerz/tcdocker:v1
-
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #   - name: Build TC
-  #     run: |
-  #       export DEBIAN_FRONTEND=noninteractive
-  #       export PATH=/usr/bin/core_perl:$PATH
-  #       cp -af kernel/build-mod.sh kernel/build.sh
-  #       bash ci.sh deps
-  #       bash clang-builder.sh 13 gi
-
   EmpatLebas:
 
     runs-on: ubuntu-latest
@@ -38,10 +21,27 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Build TC
+    - name: Build TC 14
       run: |
         export DEBIAN_FRONTEND=noninteractive
         export PATH=/usr/bin/core_perl:$PATH
         cp -af kernel/build-mod.sh kernel/build.sh
         bash ci.sh deps
         bash clang-builder.sh 14 gi
+
+  MainAja:
+
+    runs-on: ubuntu-latest
+
+    container:
+      image: zycromerz/tcdocker:v1
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build TC Main
+      run: |
+        export DEBIAN_FRONTEND=noninteractive
+        export PATH=/usr/bin/core_perl:$PATH
+        cp -af kernel/build-mod.sh kernel/build.sh
+        bash ci.sh deps
+        bash clang-builder.sh main gi
