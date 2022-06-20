@@ -48,11 +48,12 @@ fi
 # EXTRA_ARGS+=("--pgo kernel-defconfig")
 ./build-llvm.py \
     --clang-vendor "ZyC" \
-    --targets "ARM;AArch64;X86" \
+    --targets "AArch64;ARM;X86" \
     --defines "LLVM_PARALLEL_COMPILE_JOBS=$TomTal LLVM_PARALLEL_LINK_JOBS=$TomTal CMAKE_C_FLAGS='-g0 -O3' CMAKE_CXX_FLAGS='-g0 -O3'" \
     --shallow-clone \
     --no-ccache \
     --branch "$UseBranch" \
+    --pgo "kernel-defconfig-slim" \
     "${EXTRA_ARGS[@]}"
 
 
@@ -142,15 +143,14 @@ fail="n"
 TotalTry="0"
 UploadAgain()
 {
-    GetRelease="$(./github-release upload \
+    fail="n"
+    ./github-release upload \
         --security-token "$GIT_SECRET" \
         --user ZyCromerZ \
         --repo Clang \
         --tag ${clang_version}-${TagsDate}-release \
         --name "$ZipName" \
-        --file "$ZipName")"
-    [[ -z "$GetRelease" ]] && fail="n"
-    [[ "$GetRelease" == *"already_exists"* ]] && fail="n"
+        --file "$ZipName" || fail="y"
     TotalTry=$(($TotalTry+1))
     if [ "$fail" == "y" ];then
         if [ "$TotalTry" != "5" ];then
