@@ -14,6 +14,22 @@ env:
   GIT_SECRET: ${{ secrets.GIT_SECRET }}
 
 jobs:
+  TigaLebas:
+
+    runs-on: ubuntu-20.04
+
+    container:
+      image: zycromerz/tcdocker:v1
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build TC 13
+      run: |
+        export DEBIAN_FRONTEND=noninteractive
+        export PATH=/usr/bin/core_perl:$PATH
+        bash ci.sh deps
+        bash clang-builder.sh 13 gi
+
   EmpatLebas:
 
     runs-on: ubuntu-20.04
