@@ -65,8 +65,21 @@ if [[ -z "${GIT_SECRET}" ]] || [[ -z "${BOT_TOKEN}" ]];then
     exit
 fi
 
-wget https://raw.githubusercontent.com/ZyCromerZ/Clang/main/Clang-$EsOne-lastbuild.txt -O result.txt 1>/dev/null 2>/dev/null || echo 'blank' > result.txt
-wget https://raw.githubusercontent.com/ZyCromerZ/Clang/main/Clang-$EsOne-commit.txt -O result-b.txt 1>/dev/null 2>/dev/null || echo 'blank' > result-b.txt
+wget -q https://raw.githubusercontent.com/ZyCromerZ/Clang/main/Clang-$EsOne-lastbuild.txt -O result.txt || echo 'blank' > result.txt
+wget -q https://raw.githubusercontent.com/ZyCromerZ/Clang/main/Clang-$EsOne-commit.txt -O result-b.txt || echo 'blank' > result-b.txt
+wget -q https://raw.githubusercontent.com/ZyCromerZ/Clang/main/Clang-$EsOne-commit.txt -O result-c.txt || echo 'blank' > result-c.txt
+
+if [[ "$(cat result-c.txt)" != 'blank' ]];then
+    GetDt="$(cat result-c.txt)"
+    wget -q https://github.com/ZyCromerZ/binutils-maker/releases/download/master-${GetDt}-up/binutils-master.sha512 -O sha512
+    if [[ -e sha512 ]];then
+        urls=$(echo "https://github.com/ZyCromerZ/binutils-maker/releases/download/master-${GetDt}-up/binutils-master.tar.xz" | sed -r 's/\//\\\//g' )
+        sed -i "s/ = "'"'"---for-links---/ = "'"'"${urls}/" utils.py
+        sed -i "s/binutils-2.38/binutils-master/" utils.py
+        sed -i "s/8bf0b0d193c9c010e0518ee2b2e5a830898af206510992483b427477ed178396cd210235e85fd7bd99a96fc6d5eedbeccbd48317a10f752b7336ada8b2bb826d/$(cat sha512)/" utils.py
+        rm -rf sha512
+    fi
+fi
 
 if [[ "$(cat result.txt)" == *"$TagsDateF"* ]];then
     # Stop="Y"
@@ -82,7 +95,7 @@ if [[ "$(curl -X GET -H "Cache-Control: no-cache" https://api.github.com/repos/l
     exit
 fi
 
-rm -rf result.txt result-b.txt
+rm -rf result.txt result-b.txt result-c.txt
 
 if [[ "$UseBranch" != "main" ]] && [[ "$(date +"%u")" != "1" ]];then
     # Stop="Y"
@@ -92,9 +105,10 @@ fi
 
 TomTal=$(nproc)
 if [[ ! -z "${2}" ]];then
-    TomTal=$(($TomTal*2))
+    TomTal=$(($TomTal*4))
     # EXTRA_ARGS+=(--install-stage1-only)
 fi 
+TomTal=$(($TomTal+1))
 # unlimitedEcho &
 # EXTRA_ARGS+=("--pgo kernel-defconfig")
 # --projects "clang;lld;polly${EXTRA_PRJ}" \
@@ -103,7 +117,6 @@ fi
     --targets "AArch64;ARM;X86" \
     --defines "LLVM_PARALLEL_COMPILE_JOBS=$TomTal LLVM_PARALLEL_LINK_JOBS=$TomTal CMAKE_C_FLAGS='-g0 -O3' CMAKE_CXX_FLAGS='-g0 -O3'" \
     --shallow-clone \
-    --no-ccache \
     --branch "$UseBranch" \
     --pgo "kernel-defconfig-slim" \
     "${EXTRA_ARGS[@]}" || fail="y"
