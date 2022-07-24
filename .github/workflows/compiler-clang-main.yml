@@ -124,24 +124,24 @@ jobs:
         bash update-clang-version.sh 14
         bash clang-builder.sh 14 gi
 
-  MainAja:
+  # MainAja:
 
-    runs-on: ubuntu-20.04
+  #   runs-on: ubuntu-20.04
 
-    container:
-      image: zycromerz/tcdocker:v1
+  #   container:
+  #     image: zycromerz/tcdocker:v1
 
-    steps:
-    - name: checkout
-      uses: actions/checkout@v2
-      with:
-        path: clang-main
+  #   steps:
+  #   - name: checkout
+  #     uses: actions/checkout@v2
+  #     with:
+  #       path: clang-main
 
-    - name: Build TC main
-      run: |
-        cd clang-main
-        export DEBIAN_FRONTEND=noninteractive
-        export PATH=/usr/bin/core_perl:$PATH
-        bash ci.sh deps
-        bash update-clang-version.sh main
-        bash clang-builder.sh main gi
+  #   - name: Build TC main
+  #     run: |
+  #       cd clang-main
+  #       export DEBIAN_FRONTEND=noninteractive
+  #       export PATH=/usr/bin/core_perl:$PATH
+  #       bash ci.sh deps
+  #       bash update-clang-version.sh main
+  #       bash clang-builder.sh main gi
