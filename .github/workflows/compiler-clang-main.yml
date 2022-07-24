@@ -14,72 +14,6 @@ env:
   GIT_SECRET: ${{ secrets.GIT_SECRET }}
 
 jobs:
-  Selupuh:
-
-    runs-on: ubuntu-20.04
-
-    container:
-      image: zycromerz/tcdocker:v1
-
-    steps:
-    - name: checkout
-      uses: actions/checkout@v2
-      with:
-        path: clang-10
-
-    - name: Build TC 10
-      run: |
-        cd clang-10
-        export DEBIAN_FRONTEND=noninteractive
-        export PATH=/usr/bin/core_perl:$PATH
-        bash ci.sh deps
-        bash update-clang-version.sh 11
-        bash clang-builder.sh 10 gi
-
-  SeLebas:
-
-    runs-on: ubuntu-20.04
-
-    container:
-      image: zycromerz/tcdocker:v1
-
-    steps:
-    - name: checkout
-      uses: actions/checkout@v2
-      with:
-        path: clang-11
-
-    - name: Build TC 11
-      run: |
-        cd clang-11
-        export DEBIAN_FRONTEND=noninteractive
-        export PATH=/usr/bin/core_perl:$PATH
-        bash ci.sh deps
-        bash update-clang-version.sh 11
-        bash clang-builder.sh 11 gi
-
-  DuaLebas:
-
-    runs-on: ubuntu-20.04
-
-    container:
-      image: zycromerz/tcdocker:v1
-
-    steps:
-    - name: checkout
-      uses: actions/checkout@v2
-      with:
-        path: clang-12
-
-    - name: Build TC 12
-      run: |
-        cd clang-12
-        export DEBIAN_FRONTEND=noninteractive
-        export PATH=/usr/bin/core_perl:$PATH
-        bash ci.sh deps
-        bash update-clang-version.sh 12
-        bash clang-builder.sh 12 gi
-
   TigaLebas:
 
     runs-on: ubuntu-20.04
@@ -123,25 +57,3 @@ jobs:
         bash ci.sh deps
         bash update-clang-version.sh 14
         bash clang-builder.sh 14 gi
-
-  # MainAja:
-
-  #   runs-on: ubuntu-20.04
-
-  #   container:
-  #     image: zycromerz/tcdocker:v1
-
-  #   steps:
-  #   - name: checkout
-  #     uses: actions/checkout@v2
-  #     with:
-  #       path: clang-main
-
-  #   - name: Build TC main
-  #     run: |
-  #       cd clang-main
-  #       export DEBIAN_FRONTEND=noninteractive
-  #       export PATH=/usr/bin/core_perl:$PATH
-  #       bash ci.sh deps
-  #       bash update-clang-version.sh main
-  #       bash clang-builder.sh main gi
